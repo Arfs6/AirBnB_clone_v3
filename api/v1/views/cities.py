@@ -56,7 +56,7 @@ def createCity(state_id):
     cityObj = City()
     cityObj.state_id = state_id
     for key, value in rawCity.items():
-        if key not in ['id', 'created_at', 'updated_at']:
+        if key not in ['id', 'created_at', 'updated_at', 'state_id']:
             setattr(cityObj, key, value)
     cityObj.save()
     return cityObj.to_dict(), 201
