@@ -53,7 +53,6 @@ def createState():
 
     for key, value in newStateDict.items():
         setattr(newState, key, value)
-    storage.new(newState)
     storage.save()
     return newState.to_dict(), 201
 
