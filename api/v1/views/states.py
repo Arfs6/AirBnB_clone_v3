@@ -53,7 +53,7 @@ def createState():
 
     for key, value in newStateDict.items():
         setattr(newState, key, value)
-    storage.save()
+    newState.save()
     return newState.to_dict(), 201
 
 
@@ -67,7 +67,6 @@ def updateState(state_id):
     if not data:
         abort(400, 'Not a JSON')
 
-    # Update the State object's attributes based on the JSON data
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(stateObj, key, value)

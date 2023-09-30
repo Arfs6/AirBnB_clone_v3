@@ -57,8 +57,8 @@ def createCity(state_id):
     cityObj.state_id = state_id
     for key, value in rawCity.items():
         if key not in ['id', 'created_at', 'updated_at']:
-            setattr(rawCity, key, value)
-    storage.save()
+            setattr(cityObj, key, value)
+    cityObj.save()
     return cityObj.to_dict(), 201
 
 
@@ -73,9 +73,8 @@ def putCity(city_id):
     if not data:
         abort(400, 'Not a JSON')
 
-    # Update the State object's attributes based on the JSON data
     for key, value in data.items():
         if key not in ['id', 'state_id', 'created_at', 'updated_at']:
             setattr(cityObj, key, value)
-    storage.save()
+    cityObj.save()
     return cityObj.to_dict()
