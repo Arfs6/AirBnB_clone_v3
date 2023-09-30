@@ -32,3 +32,12 @@ def stats():
     response = make_response(dumps(data, indent=2))
     response.headers['Content-Type'] = 'application/json'
     return response
+
+
+@app_views.app_errorhandler(404)
+def notfound(error):
+    """What to return when flask doesn't find a view."""
+    data = {'error': 'Not found'}
+    response = make_response(dumps(data, indent=2))
+    response.headers['Content-Type'] = 'application/json'
+    return response, 404
