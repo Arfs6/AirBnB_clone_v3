@@ -1,43 +1,27 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
-"""Index resource of api."""
+"""Returns a Json response"""
 
-from json import dumps
-from flask import make_response
+from flask import jsonify
 from api.v1.views import app_views
-import models
+from models import storage
+from models import amenity, city, place, review, state, user
 
 
 @app_views.route('/status')
-def status():
-    """Checks if server is still up."""
-    response = make_response(dumps({
-        'status': 'OK',
-    },
-                 indent=2))
-    response.headers['Content-Type'] = 'application/json'
-    return response
+def status_check():
+    '''Returns status code'''
+    return jsonify({"status": "OK"})
 
 
-@app_views.route('/stats')
-def stats():
-    """Get some stats."""
-    data = {}
-    data['amenities'] = models.storage.count(models.amenity.Amenity)
-    data['cities'] = models.storage.count(models.city.City)
-    data['places'] = models.storage.count(models.place.Place)
-    data['reviews'] = models.storage.count(models.review.Review)
-    data['states'] = models.storage.count(models.state.State)
-    data['users'] = models.storage.count(models.user.User)
-    response = make_response(dumps(data, indent=2))
-    response.headers['Content-Type'] = 'application/json'
-    return response
-
-
-@app_views.app_errorhandler(404)
-def notfound(error):
-    """What to return when flask doesn't find a view."""
-    data = {'error': 'Not found'}
-    response = make_response(dumps(data, indent=2))
-    response.headers['Content-Type'] = 'application/json'
-    return response, 404
+@app_views.route('/stats', methods=['GET'])
+def object_stats():
+    """Retrieves the no of each object by type"""
+    objects = {
+            "amenities": storage.count(amenity.Amenity),
+            "cities": storage.count(city.City),
+            "places": storage.count(place.Place),
+            "reviews": storage.count(review.Review),
+            "states": storage.count(state.State),
+            "users": storage.count(user.User),
+            }
+    return jsonify(objects)
