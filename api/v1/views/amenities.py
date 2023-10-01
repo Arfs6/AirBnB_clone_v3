@@ -64,7 +64,6 @@ def updateAmenity(amenity_id):
     if not data:
         abort(400, 'Not a JSON')
 
-    # Update the State object's attributes based on the JSON data
     for key, value in data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(amenityObj, key, value)
