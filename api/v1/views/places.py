@@ -4,8 +4,10 @@
 from flask import request, abort
 from api.v1.views import app_views
 from models import storage
+from models.amenity import Amenity
 from models.city import City
 from models.place import Place
+from models.state import State
 from models.user import User
 
 
@@ -84,3 +86,42 @@ def updatePlace(place_id):
             setattr(placeObj, key, value)
     placeObj.save()
     return placeObj.to_dict(), 200
+
+
+@app_views.route('/places_search', methods=['post'],
+           strict_slashes=False)
+def searchPlace():
+    """Search for places"""
+    data = request.get_json()
+    if data is None:
+        abort(404)
+    if not data or (
+        not data.get('states')
+        and not data.get('cities')
+        and not data.get('amenities')
+    ):
+        return [obj.to_dict() for obj in storage.all(Place).values()]
+    citiesSet = set()
+    if data.get('states'):
+        for stateId in data.get('states'):
+            stateObj = storage.get(State, stateId)
+            if not stateObj:
+                abort(404)
+            citiesSet.update({cityObj for cityObj in stateObj.cities})
+    if data.get('cities'):
+        for cityId in data.get('id'):
+            cityObj = storage.get(City, cityId)
+            if not cityObj:
+                abort(404)
+            citiesSet.add(cityObj)
+    placesList = [cityObj.places for cityObj in citiesSet]
+    if data.get('amenities'):
+        if not data.get('states') and not data.get('cities'):
+            placesList = list(storage.all(Place).values())
+        amenities = [storage.get(Amenity, amenityId) for amenityId in data.get('amenities')]
+        copiedPlaces = placesList.copy()
+        for placeObj in copiedPlaces:
+            if not all(amenity in placeObj.amenities for amenity in amenities):
+                placesList.remove(placeObj)
+
+    return [placeObj.to_dict() for placeObj in placesList]
