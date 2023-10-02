@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """End point for the link between amenities and places"""
 
-from flask import jsonify, request, abort, make_response
+from flask import request, abort
 from api.v1.views import app_views
 from models import storage, storage_t
 from models.place import Place
@@ -62,7 +62,7 @@ def linkPlaceWithAmenity(place_id, amenity_id):
 
     if storage_t == "db":
         if amenity in place.amenities:
-            return amenity.to_dict())
+            return amenity.to_dict()
         else:
             place.amenities.append(amenity)
     else:

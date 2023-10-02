@@ -2,6 +2,7 @@
 """users endpoint"""
 
 from flask import request, abort
+import hashlib
 from api.v1.views import app_views
 from models import storage
 from models.user import User
@@ -35,6 +36,13 @@ def deleteUserById(user_id):
     return {}, 200
 
 
+def hashPassword(password):
+    """converts a password to an md5 hash."""
+    md5Hash = hashlib.md5()
+    md5Hash.update(password.encode('utf-8'))
+    return md5Hash.hexdigest()
+
+
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
 def newUser():
     """Creates a new User.
@@ -48,8 +56,10 @@ def newUser():
     elif 'password' not in userInfo:
         abort(400, 'Missing password')
     newUser = User()
+    newUser.password = hashPassword(userInfo['password'])
+    ignoreAttrs = ['id', 'created_at', 'updated_at', 'password']
     for key, value in userInfo.items():
-        if key not in ['id', 'created_at', 'updated_at']:
+        if key not in ignoreAttrs:
             setattr(newUser, key, value)
     newUser.save()
     return newUser.to_dict(), 201
@@ -67,6 +77,8 @@ def updateUser(user_id):
     if not userInfo:
         abort(400, 'Not a JSON')
 
+    if 'password' in userInfo:
+        userObj.password = hashPassword(userInfo.pop('password'))
     for key, value in userInfo.items():
         if key not in ['id', 'email', 'created_at', 'updated_at']:
             setattr(userObj, key, value)
