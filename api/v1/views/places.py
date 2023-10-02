@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Create a view for Place"""
+"""places endpoints"""
 
 from flask import request, abort
 from api.v1.views import app_views
@@ -38,7 +38,7 @@ def deletePlaceById(place_id):
         abort(404)
     placeObj.delete()
     storage.save()
-    return {}, 200
+    return {}
 
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'],
@@ -51,7 +51,7 @@ def newPlace(city_id):
     data = request.get_json()
     if not data:
         abort(400, 'Not a JSON')
-    if 'user_id' not in data:
+    elif 'user_id' not in data:
         abort(400, 'Missing user_id')
     userObj = storage.get(User, data['user_id'])
     if not userObj:

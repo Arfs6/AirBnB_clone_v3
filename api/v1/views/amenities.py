@@ -8,10 +8,10 @@ from models.amenity import Amenity
 
 
 @app_views.route('/amenities', strict_slashes=False)
-def getAmenities():
+def getAllAmenities():
     """Retrieves the list of all Amenity objects"""
-    objs = storage.all(Amenity)
-    return [obj.to_dict() for obj in objs.values()]
+    allAmenities = storage.all(Amenity)
+    return [obj.to_dict() for obj in allAmenities.values()]
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False)
@@ -43,7 +43,7 @@ def createAmenity():
     data = request.get_json()
     if not data:
         abort(400, 'Not a JSON')
-    if not data.get('name'):
+    elif 'name' not in data:
         abort(400, 'Missing name')
     amenityObj = Amenity()
     for key, value in data.items():
@@ -68,4 +68,4 @@ def updateAmenity(amenity_id):
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(amenityObj, key, value)
     amenityObj.save()
-    return make_response(jsonify(amenityObj.to_dict()), 200)
+    return amenityObj.to_dict(), 200

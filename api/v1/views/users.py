@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Create a view for User"""
+"""users endpoint"""
 
 from flask import request, abort
 from api.v1.views import app_views
@@ -8,7 +8,7 @@ from models.user import User
 
 
 @app_views.route('/users', strict_slashes=False)
-def allUsers():
+def getAllUsers():
     """Returns a list object containing all User objects."""
     allUsers = storage.all(User)
     return [userObj.to_dict() for userObj in allUsers.values()]
@@ -43,9 +43,9 @@ def newUser():
     userInfo = request.get_json()
     if not userInfo:
         abort(400, 'Not a JSON')
-    if 'email' not in userInfo:
+    elif 'email' not in userInfo:
         abort(400, 'Missing email')
-    if 'password' not in userInfo:
+    elif 'password' not in userInfo:
         abort(400, 'Missing password')
     newUser = User()
     for key, value in userInfo.items():
@@ -71,4 +71,4 @@ def updateUser(user_id):
         if key not in ['id', 'email', 'created_at', 'updated_at']:
             setattr(userObj, key, value)
     userObj.save()
-    return userObj.to_dict(), 200
+    return userObj.to_dict()

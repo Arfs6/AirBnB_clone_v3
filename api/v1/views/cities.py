@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Create a view for city"""
+"""cities endpoint"""
 
 from flask import request, abort
 from api.v1.views import app_views
@@ -21,10 +21,10 @@ def citiesByState(state_id):
 @app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
 def getCity(city_id):
     """Get City object linked with id @city_id"""
-    city = storage.get("City", city_id)
-    if city is None:
+    cityObj = storage.get(City, city_id)
+    if cityObj is None:
         abort(404)
-    return city.to_dict()
+    return cityObj.to_dict()
 
 
 @app_views.route('/cities/<city_id>', methods=['DELETE'],
