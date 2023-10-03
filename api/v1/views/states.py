@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Endpoints for state"""
 
-from flask import request, abort
+from flask import request, abort, jsonify
 from api.v1.views import app_views
 from models import storage
 from models.state import State
@@ -11,7 +11,7 @@ from models.state import State
 def allStatesList():
     """Retrieves the list of all State objects"""
     stateList = storage.all(State)
-    return [obj.to_dict() for obj in stateList.values()]
+    return jsonify([obj.to_dict() for obj in stateList.values()])
 
 
 @app_views.route('/states/<state_id>', strict_slashes=False)
