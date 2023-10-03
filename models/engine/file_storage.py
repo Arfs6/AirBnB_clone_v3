@@ -76,7 +76,7 @@ class FileStorage:
         - id: id attribute of object.
         Returns: An instance of @cls with id attribute equals to @id or None.
         """
-        return self.__objects.get(f"{cls.__name__}.{id}")
+        return self.__objects.get(cls.__name__ + '.' + id)
 
     def count(self, cls=None):
         """Return the number of stored models.
