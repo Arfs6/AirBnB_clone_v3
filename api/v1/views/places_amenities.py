@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """End point for the link between amenities and places"""
 
-from flask import request, abort
+from flask import abort, jsonify
 from api.v1.views import app_views
 from models import storage, storage_t
 from models.place import Place
@@ -22,7 +22,7 @@ def allAmenitiesInPlace(place_id):
             for amenity_id in place.amenity_ids
         ]
 
-    return amenities
+    return jsonify(amenities)
 
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',

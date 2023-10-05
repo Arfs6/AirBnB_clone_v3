@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """reviews endpoint"""
 
-from flask import request, abort
+from flask import request, abort, jsonify
 from api.v1.views import app_views
 from models import storage
 from models.place import Place
@@ -15,7 +15,7 @@ def allReviewsInPlace(place_id):
     placeObj = storage.get(Place, place_id)
     if not placeObj:
         abort(404)
-    return [reviewObj.to_dict() for reviewObj in placeObj.reviews]
+    return jsonify([reviewObj.to_dict() for reviewObj in placeObj.reviews])
 
 
 @app_views.route('/reviews/<review_id>', strict_slashes=False)

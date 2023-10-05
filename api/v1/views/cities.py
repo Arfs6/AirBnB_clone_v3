@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """cities endpoint"""
 
-from flask import request, abort
+from flask import request, abort, jsonify
 from api.v1.views import app_views
 from models import storage
 from models.state import State
@@ -15,7 +15,7 @@ def citiesByState(state_id):
     stateObj = storage.get(State, state_id)
     if not stateObj:
         abort(404)
-    return [cityObj.to_dict() for cityObj in stateObj.cities]
+    return jsonify([cityObj.to_dict() for cityObj in stateObj.cities])
 
 
 @app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)

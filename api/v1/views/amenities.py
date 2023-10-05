@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Endpoints for amenity"""
 
-from flask import request, abort
+from flask import request, abort, jsonify
 from api.v1.views import app_views
 from models import storage
 from models.amenity import Amenity
@@ -11,7 +11,7 @@ from models.amenity import Amenity
 def getAllAmenities():
     """Retrieves the list of all Amenity objects"""
     allAmenities = storage.all(Amenity)
-    return [obj.to_dict() for obj in allAmenities.values()]
+    return jsonify([obj.to_dict() for obj in allAmenities.values()])
 
 
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False)

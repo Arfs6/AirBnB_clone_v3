@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """places endpoints"""
 
-from flask import request, abort
+from flask import request, abort, jsonify
 from api.v1.views import app_views
 from models import storage
 from models.amenity import Amenity
@@ -19,7 +19,7 @@ def allPlacesInCity(city_id):
     cityObj = storage.get(City, city_id)
     if not cityObj:
         abort(404)
-    return [placeObj.to_dict() for placeObj in cityObj.places]
+    return jsonify([placeObj.to_dict() for placeObj in cityObj.places])
 
 
 @app_views.route('/places/<place_id>', strict_slashes=False)

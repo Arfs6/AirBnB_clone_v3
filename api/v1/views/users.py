@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """users endpoint"""
 
-from flask import request, abort
+from flask import request, abort, jsonify
 import hashlib
 from api.v1.views import app_views
 from models import storage
@@ -12,7 +12,7 @@ from models.user import User
 def getAllUsers():
     """Returns a list object containing all User objects."""
     allUsers = storage.all(User)
-    return [userObj.to_dict() for userObj in allUsers.values()]
+    return jsonify([userObj.to_dict() for userObj in allUsers.values()])
 
 
 @app_views.route('/users/<user_id>', strict_slashes=False)
