@@ -131,7 +131,7 @@ class TestFileStorage(unittest.TestCase):
         for cls, count in objectsByClasses.items():
             self.assertEqual(
                 count, models.storage.count(cls),
-                f"cls = {cls}"
+                "cls = {}".format(cls)
             )
         self.assertEqual(len(allObjects), models.storage.count())
 

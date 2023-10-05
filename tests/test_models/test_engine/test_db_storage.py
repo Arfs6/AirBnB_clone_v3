@@ -115,13 +115,13 @@ class TestDBStorage(unittest.TestCase):
         count = 0
         for cls in classes.values():
             self.cursor.execute(
-                f"SELECT COUNT(*) FROM {cls.__tablename__};"
+                "SELECT COUNT(*) FROM {};".format(cls.__tablename__)
             )
             clsCount = self.cursor.fetchall()[0][0]
             count += clsCount
             self.assertEqual(
                 clsCount, models.storage.count(cls),
-                f"cls = {cls.__name__}"
+                "cls = {}".format(cls.__tablename__)
             )
         self.assertEqual(count, models.storage.count())
 
